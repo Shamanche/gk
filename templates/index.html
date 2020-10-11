@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>CityCard Analitics</title>
+</head>
+<body>
+  {% if company_id %}
+    <p>Выбрана компания {{ company_id }}</p>
+  {% endif %}
+
+  <p>Использование мобильного приложения <strong>CityCard</strong></p>
+  <p><i>
+  <pre>
+  Пока Паша не дал доступ к базе MYSQL, поэтому приложение выводит просто
+  список телефонов клиентов, покупавших что-либо в магазинах выбранной сети
+  </pre>
+  </i></p>
+  <p>Всего в базе данных {{ number_of_tranz }} транзакиций</p>
+  <p>Дата первой транзакции:&nbsp {{ firstdate.strftime('%d.%m.%Y  %H:%M:%S') }}</p>
+  <p>Дата последней транзакции: {{ lastdate.strftime('%d.%m.%Y  %H:%M:%S') }}</p>
+  <form action="" method="post">
+    <button name="button" value="getcompanylist">Запросить список компаний</button>
+    <br /> <br />
+    {% if companies_list %}
+      Начало периода: <input type="date" name="firstdate" value="{{ firstdate.date() }}"/> <br />
+      Конец периода: &nbsp <input type="date" name="lastdate" value="{{ lastdate.date() }}"/><br />
+      <br />
+      Выберите интересующую компанию:<br />
+      <select name="companyid" size="10">
+        {% for company in companies_list %}
+          <option value="{{ company[0] }}">
+            {{ '[' + company[0]|string + ']   ' + company[1] }}
+          </option>
+        {% endfor %}
+      </select> <br />
+      <br />
+      <button name="button" value="getdata">Получить данные</button>
+    {% endif %}
+  </form>
+
+</body>
+</html>
