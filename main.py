@@ -32,8 +32,8 @@ def index():
 
 @app.route('/report/')
 def report():
-    #company_id = request.args['company_id']
-    company_id = 4 # временно
+    company_id = request.args['company_id']
+    #company_id = 4 # временно
     first_date = request.args['first_date']
     last_date = request.args['last_date']
     print ('report:', company_id, first_date, type(first_date))
