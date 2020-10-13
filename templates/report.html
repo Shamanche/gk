@@ -8,7 +8,7 @@
   <p>Результат запроса:</p>
   {% if companyid %}
     <p> ID компании {{ companyid }}</p>
-    <p> Дата начала отчета {{ firstdate.strftime('%d.%m.%Y') }}</p>
+    <p> Дата начала отчета {{ firstdate }}</p>
     <p> Дата окончания отчета {{ lastdate }}</p>
   {% endif %}
 
@@ -25,6 +25,7 @@
         <tr><td> Количество записей: {{ len_of_phones_list }}</td></tr>
     </table>
     <br />
+
     <form>
         <button disabled="disabled"> Выгрузить отчет</button>
     </form>
