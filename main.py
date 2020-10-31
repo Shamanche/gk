@@ -6,13 +6,17 @@ app = Flask(__name__)
 
 @app.route('/', methods=['post', 'get'])
 def index():
+    try:
+        conn = mssql_connect()
+    except pyodbc.OperationalError as e:
+        return render_template('error.html', error_message=e)
     companies_list = []
-    first_date = first_transaction()
-    last_date = last_transaction()
-    number_of_tranz = count_transactions()
+    first_date = first_transaction(conn)
+    last_date = last_transaction(conn)
+    number_of_tranz = count_transactions(conn)
     if request.method == 'POST':
         if request.form['button'] == 'getcompanylist':
-            companies_list = get_all_companies()
+            companies_list = get_all_companies(conn)
         if request.form['button'] == 'getdata':
             company_id = request.form['companyid']
             first_date = request.form['firstdate']
@@ -32,15 +36,20 @@ def index():
 
 @app.route('/report/')
 def report():
+    try:
+        conn = mssql_connect()
+    except pyodbc.OperationalError as e:
+        return render_template('error.html', error_message=e)
     company_id = request.args['company_id']
     #company_id = 4 # временно
     first_date = request.args['first_date']
     last_date = request.args['last_date']
     print ('report:', company_id, first_date, type(first_date))
 
-    phones_mssql_list = get_mssql_phones(company_id,
-                                         first_date.replace('-', ''),
-                                         last_date.replace('-', ''))
+    phones_mssql_list = get_mssql_phones(conn,
+                                        company_id,
+                                        first_date.replace('-', ''),
+                                        last_date.replace('-', ''))
     print(phones_mssql_list)
     top_phones_list = phones_mssql_list[:5]
     bottom_phones_list = phones_mssql_list[-5:]
