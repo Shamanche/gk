@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Выбор даты</title>
+</head>
+<body>
+  <p>Результат запроса:</p>
+  {% if companyid %}
+    <p> ID компании {{ companyid }}</p>
+    <p> Дата начала отчета {{ firstdate }}</p>
+    <p> Дата окончания отчета {{ lastdate }}</p>
+  {% endif %}
+
+    <table>
+        <tr><th>номер телефона</th></tr>
+        {% for phone in top_phones_list %}
+          <tr><td>{{ phone[0] }}</td></tr>
+        {% endfor %}
+        <tr><td>...  ...  ...  ...</td></tr>
+        {% for phone in bottom_phones_list %}
+          <tr><td>{{ phone[0] }}</td></tr>
+        {% endfor %}
+        <br />
+        <tr><td> Количество записей: {{ len_of_phones_list }}</td></tr>
+    </table>
+    <br />
+
+    <form>
+        <button disabled="disabled"> Выгрузить отчет</button>
+    </form>
+
+</body>
