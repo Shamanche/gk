@@ -58,5 +58,13 @@ def get_mssql_phones (conn, company_id, first_date, last_date):
 
 conn = mssql_connect()
 cursor = conn.cursor()
-##x = get_mssql_phones(conn, 4, "'20130101'", "'20131231'")
+script = """
+    select distinct	CustomerPhones.Phone
+    from Transactions, Stores, Companies, DiscountCards, Accounts, CustomerPhones
+    where Transactions.StoreID = Stores.StoreID
+    	and Stores.CompanyID = Companies.CompanyID
+    	and Companies.CompanyID = 74
+    	and Transactions.DiscountCardID = DiscountCards.DiscountCardID
+    	and DiscountCards.AccountID = Accounts.AccountID
+    	and Accounts.CustomerID = CustomerPhones.CustomerID"""
 
