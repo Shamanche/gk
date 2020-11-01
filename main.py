@@ -1,8 +1,14 @@
 from flask import Flask, request, render_template, redirect, url_for
 from sql_requests import *
+import datetime
 
 app = Flask(__name__)
 
+#преобразует строку c датой вида '%Y-%m-%d' к строке '%Y-%d-%m'
+def convert_date(string):
+    date = datetime.datetime.strptime(string, '%Y-%m-%d')
+    print('date: ', date)
+    return date.strftime('%Y-%d-%m')
 
 @app.route('/', methods=['post', 'get'])
 def index():
@@ -48,8 +54,8 @@ def report():
 
     phones_mssql_list = get_mssql_phones(conn,
                                         company_id,
-                                        first_date.replace('-', ''),
-                                        last_date.replace('-', ''))
+                                        convert_date(first_date),
+                                        convert_date(last_date))
     print(phones_mssql_list)
     top_phones_list = phones_mssql_list[:5]
     bottom_phones_list = phones_mssql_list[-5:]

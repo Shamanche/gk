@@ -45,9 +45,18 @@ def get_all_companies(conn):
 # у company_id=4 всего 25 телефонов
 def get_mssql_phones (conn, company_id, first_date, last_date):
     print('Start get_mssql_phones ')
-    sql_request ="exec get_phones {}, '{}', '{}'".format(company_id,
-                                                        first_date, last_date)
-    sql_request = "exec get_phones 4, '20130101', '20131231'"
+    sql_request ="""
+        select distinct	CustomerPhones.Phone
+        from Transactions, Stores, Companies, DiscountCards,
+                                                        Accounts, CustomerPhones
+        where Transactions.TransactionTime between '{}' and '{}'
+    		and Transactions.StoreID = Stores.StoreID
+        	and Stores.CompanyID = Companies.CompanyID
+        	and Companies.CompanyID = {}
+        	and Transactions.DiscountCardID = DiscountCards.DiscountCardID
+        	and DiscountCards.AccountID = Accounts.AccountID
+        	and Accounts.CustomerID = CustomerPhones.CustomerID
+                """.format(first_date, last_date, company_id)
     print(sql_request)
     print('firstdate: ', first_date, type(first_date))
     print('lastdate', last_date)
@@ -56,15 +65,16 @@ def get_mssql_phones (conn, company_id, first_date, last_date):
     rows = cursor.fetchall()
     return rows
 
-conn = mssql_connect()
-cursor = conn.cursor()
-script = """
-    select distinct	CustomerPhones.Phone
-    from Transactions, Stores, Companies, DiscountCards, Accounts, CustomerPhones
-    where Transactions.StoreID = Stores.StoreID
-    	and Stores.CompanyID = Companies.CompanyID
-    	and Companies.CompanyID = 74
-    	and Transactions.DiscountCardID = DiscountCards.DiscountCardID
-    	and DiscountCards.AccountID = Accounts.AccountID
-    	and Accounts.CustomerID = CustomerPhones.CustomerID"""
+##conn = mssql_connect()
+##cursor = conn.cursor()
+##script = """
+##    select distinct	CustomerPhones.Phone
+##    from Transactions, Stores, Companies, DiscountCards, Accounts, CustomerPhones
+##    where Transactions.TransactionTime between '2019-01-01' and '2019-31-12'
+##		and Transactions.StoreID = Stores.StoreID
+##    	and Stores.CompanyID = Companies.CompanyID
+##    	and Companies.CompanyID = 74
+##    	and Transactions.DiscountCardID = DiscountCards.DiscountCardID
+##    	and DiscountCards.AccountID = Accounts.AccountID
+##    	and Accounts.CustomerID = CustomerPhones.CustomerID"""
 
