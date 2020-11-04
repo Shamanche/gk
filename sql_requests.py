@@ -1,4 +1,11 @@
-import pyodbc
+import pyodbc, pymysql
+
+def mysql_connect():
+    conn = pymysql.connect(host='test.gorkarta.ru',
+                           user='root',
+                           password='Sm620514',
+                           db='Ccserver')
+    return conn
 
 def mssql_connect():
     driver = 'DRIVER={ODBC Driver 17 for SQl Server}'
@@ -60,6 +67,14 @@ def get_mssql_phones (conn, company_id, first_date, last_date):
     print(sql_request)
     print('firstdate: ', first_date, type(first_date))
     print('lastdate', last_date)
+    cursor = conn.cursor()
+    cursor.execute(sql_request)
+    rows = cursor.fetchall()
+    return rows
+
+def get_mysql_phones(conn):
+    print('Start get_MYSQL_phones ')
+    sql_request = "SELECT phone FROM user WHERE token IS NOT NULL"
     cursor = conn.cursor()
     cursor.execute(sql_request)
     rows = cursor.fetchall()

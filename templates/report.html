@@ -8,26 +8,20 @@
   <p>Результат запроса:</p>
   {% if companyid %}
     <p> ID компании {{ companyid }}</p>
-    <p> Дата начала отчета {{ firstdate }}</p>
-    <p> Дата окончания отчета {{ lastdate }}</p>
+    <p> Дата начала отчета: {{ firstdate }}</p>
+    <p> Дата окончания отчета: {{ lastdate }}</p>
   {% endif %}
+  <p>В базе данных RS.Loyalty найдено {{ number_mssql_phones }} телефонов</p>
+  <p>Всего телефонов с токенами: {{ number_mysql_phones }} </p>
 
-    <table>
-        <tr><th>номер телефона</th></tr>
-        {% for phone in top_phones_list %}
-          <tr><td>{{ phone[0] }}</td></tr>
-        {% endfor %}
-        <tr><td>...  ...  ...  ...</td></tr>
-        {% for phone in bottom_phones_list %}
-          <tr><td>{{ phone[0] }}</td></tr>
-        {% endfor %}
-        <br />
-        <tr><td> Количество записей: {{ len_of_phones_list }}</td></tr>
-    </table>
-    <br />
+  <p><strong>
+    Среди клиентов компании пользуются мобильным приложением {{ number_result }}.
+  </strong></p>
 
-    <form>
-        <button disabled="disabled"> Выгрузить отчет</button>
-    </form>
+
+
+  <form>
+    <button disabled="disabled"> Выгрузить отчет</button>
+  </form>
 
 </body>

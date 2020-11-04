@@ -56,18 +56,27 @@ def report():
                                         company_id,
                                         convert_date(first_date),
                                         convert_date(last_date))
-    print(phones_mssql_list)
-    top_phones_list = phones_mssql_list[:5]
-    bottom_phones_list = phones_mssql_list[-5:]
+    #print(phones_mssql_list)
+    try:
+        conn = mysql_connect()
+    except pymysql.err.OperationalError as e:
+        return render_template('error.html', error_message=e)
+
+    phones_mysql_list = get_mysql_phones(conn)
+    mssql_phones_set = set(i[0][1:] for i in phones_mssql_list)
+    mysql_phones_set = set(i[0] for i in phones_mysql_list)
+    result = mssql_phones_set & mysql_phones_set
+
+
     template_context = {
         'companyid': company_id,
         'firstdate': first_date,
         'lastdate': last_date,
-        'top_phones_list': top_phones_list,
-        'bottom_phones_list': bottom_phones_list,
-        'len_of_phones_list': len(phones_mssql_list)
+        'number_mssql_phones': len(phones_mssql_list),
+        'number_mysql_phones': len(phones_mysql_list),
+        'number_result': len(result)
         }
     return render_template('report.html', **template_context)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
