@@ -14,14 +14,17 @@
   <p>В базе данных RS.Loyalty найдено {{ number_mssql_phones }} телефонов</p>
   <p>Всего телефонов с токенами: {{ number_mysql_phones }} </p>
 
-  <p><strong>
-    Среди клиентов компании пользуются мобильным приложением {{ number_result }}.
-  </strong></p>
+  <p>
+    Среди клиентов компании пользуются мобильным
+                                        приложением <b>{{ number_result }}</b>.
+  </p>
 
 
 
   <form>
-    <button disabled="disabled"> Выгрузить отчет</button>
+    <button disabled="disabled"> Выгрузить телефоны RS</button>
+    <button disabled="disabled"> Выгрузить телефоны МП</button>
+    <button disabled="disabled"> Выгрузить результат</button>
   </form>
 
 </body>

@@ -1,4 +1,5 @@
-import pyodbc, pymysql
+import pymysql, pymssql
+##import pyodbc
 
 def mysql_connect():
     conn = pymysql.connect(host='test.gorkarta.ru',
@@ -8,16 +9,26 @@ def mysql_connect():
     return conn
 
 def mssql_connect():
-    driver = 'DRIVER={ODBC Driver 17 for SQl Server}'
-    server = 'SERVER=test.gorkarta.ru'
-    port = 'PORT=1433'
-    db = 'DATABASE=RSLoyalty5'
-    user = 'UID=sa'
-    pw = 'PWD=Hymp112'
-    conn_str = ';'.join([driver, server, port, db, user, pw])
-    print(conn_str)
-    conn = pyodbc.connect(conn_str, timeout=1)
+    conn = pymssql.connect(
+        server="test.gorkarta.ru",
+        database="RSLoyalty5",
+        user="sa",
+        password="Hymp112",
+        port=1433)
     return conn
+
+
+##def mssql_connect():
+##    driver = 'DRIVER={ODBC Driver 17 for SQl Server}'
+##    server = 'SERVER=test.gorkarta.ru'
+##    port = 'PORT=1433'
+##    db = 'DATABASE=RSLoyalty5'
+##    user = 'UID=sa'
+##    pw = 'PWD=Hymp112'
+##    conn_str = ';'.join([driver, server, port, db, user, pw])
+##    print(conn_str)
+##    conn = pyodbc.connect(conn_str, timeout=1)
+##    return conn
 
 def count_transactions(conn):
     sql_request ="select count(*) FROM Transactions"
