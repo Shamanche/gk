@@ -5,6 +5,7 @@
   <title>CityCard Analitics</title>
 </head>
 <body>
+  <a href="{{ url_for('files', filename=filename1) }}">file1</a>
   {% if company_id %}
     <p>Выбрана компания {{ company_id }}</p>
   {% endif %}

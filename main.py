@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, send_file
 from sql_requests import *
 import datetime
 
@@ -12,6 +12,8 @@ def convert_date(string):
 
 @app.route('/', methods=['post', 'get'])
 def index():
+    filename1 = 'file1.csv'
+
     try:
         conn = mssql_connect()
     except pyodbc.OperationalError as e:
@@ -36,7 +38,8 @@ def index():
         'firstdate': first_date,
         'lastdate': last_date,
         'companies_list': companies_list,
-        'number_of_tranz': number_of_tranz
+        'number_of_tranz': number_of_tranz,
+        'filename1': filename1
         }
     return render_template('index.html', **template_context)
 
@@ -77,6 +80,16 @@ def report():
         'number_result': len(result)
         }
     return render_template('report.html', **template_context)
+
+@app.route('/files/<filename>')
+def files(filename):
+    pass
+##    full_filename = 'files\\' + filename
+##    print('Full filename', full_filename)
+##    print('URL FOR ', url_for('files', filename=filename))
+##    return send_file(full_filename, as_attachment=True)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False)
