@@ -10,10 +10,17 @@ def convert_date(string):
     print('date: ', date)
     return date.strftime('%Y-%d-%m')
 
+def make_file(data, filename='testfile1'):
+    full_name = (filename + '_'
+                        + datetime.datetime.now().strftime('%Y-%m-%d') + '.csv')
+    with open (full_name, 'w') as f:
+        for i in data:
+            f.write(i+'\n')
+    return full_name
+
 @app.route('/', methods=['post', 'get'])
 def index():
     filename1 = 'file1.csv'
-
     try:
         conn = mssql_connect()
     except pyodbc.OperationalError as e:
@@ -70,6 +77,9 @@ def report():
     mysql_phones_set = set(i[0] for i in phones_mysql_list)
     result = mssql_phones_set & mysql_phones_set
 
+    mssql_filename = make_file(mssql_phones_set, 'Телефоны клиентов компании')
+    mysql_filename = make_file(mysql_phones_set, 'Телефоный всех клиентов')
+    result_filename = make_file(result, 'Результат')
 
     template_context = {
         'companyid': company_id,
@@ -77,7 +87,10 @@ def report():
         'lastdate': last_date,
         'number_mssql_phones': len(phones_mssql_list),
         'number_mysql_phones': len(phones_mysql_list),
-        'number_result': len(result)
+        'number_result': len(result),
+        'mssql_filename': mssql_filename,
+        'mysql_filename': mysql_filename,
+        'result_filename': result_filename
         }
     return render_template('report.html', **template_context)
 
@@ -88,7 +101,6 @@ def files(filename):
 ##    print('Full filename', full_filename)
 ##    print('URL FOR ', url_for('files', filename=filename))
 ##    return send_file(full_filename, as_attachment=True)
-
 
 
 if __name__ == '__main__':
