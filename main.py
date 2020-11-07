@@ -7,10 +7,10 @@ FOLDER = 'files' # папка для хранения файлов
 app = Flask(__name__)
 
 #преобразует строку c датой вида '%Y-%m-%d' к строке '%Y-%d-%m'
-def convert_date(string):
-    date = datetime.datetime.strptime(string, '%Y-%m-%d')
-    print('date: ', date)
-    return date.strftime('%Y-%d-%m')
+##def convert_date(string):
+##    date = datetime.datetime.strptime(string, '%Y-%m-%d')
+##    print('date: ', date)
+##    return date.strftime('%Y-%d-%m')
 
 def make_file(data, filename='testfile1'):
     full_name = os.path.join(FOLDER, filename + '_'
@@ -69,9 +69,7 @@ def report():
     print ('report:', company_id, first_date, type(first_date))
 
     phones_mssql_list = get_mssql_phones(conn,
-                                        company_id,
-                                        convert_date(first_date),
-                                        convert_date(last_date))
+                                            company_id, first_date, last_date)
     try:
         conn = mysql_connect()
     except pymysql.err.OperationalError as e:

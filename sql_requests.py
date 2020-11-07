@@ -64,7 +64,7 @@ def get_all_companies(conn):
 def get_mssql_phones (conn, company_id, first_date, last_date):
     print('Start get_mssql_phones ')
     sql_request ="""
-        set dateformat ydm
+        set dateformat ymd
         select distinct	CustomerPhones.Phone
         from Transactions, Stores, Companies, DiscountCards,
                                                         Accounts, CustomerPhones
