@@ -1,6 +1,8 @@
 from flask import Flask, request, render_template, redirect, url_for, send_file
 from sql_requests import *
-import datetime
+import datetime, os
+
+FOLDER = 'files' # папка для хранения файлов
 
 app = Flask(__name__)
 
@@ -11,19 +13,24 @@ def convert_date(string):
     return date.strftime('%Y-%d-%m')
 
 def make_file(data, filename='testfile1'):
-    full_name = (filename + '_'
-                        + datetime.datetime.now().strftime('%Y-%m-%d') + '.csv')
+    full_name = os.path.join(FOLDER, filename + '_'
+                    + datetime.datetime.now().strftime('%Y-%m-%d') + '.csv' )
+    print(full_name)
     with open (full_name, 'w') as f:
         for i in data:
             f.write(i+'\n')
     return full_name
 
+def clear_files():
+    for file in os.listdir(FOLDER):
+        os.remove(os.path.join(FOLDER, file))
+
+
 @app.route('/', methods=['post', 'get'])
 def index():
-    filename1 = 'file1.csv'
     try:
         conn = mssql_connect()
-    except pyodbc.OperationalError as e:
+    except pymssql.OperationalError as e:
         return render_template('error.html', error_message=e)
     companies_list = []
     first_date = first_transaction(conn)
@@ -46,7 +53,6 @@ def index():
         'lastdate': last_date,
         'companies_list': companies_list,
         'number_of_tranz': number_of_tranz,
-        'filename1': filename1
         }
     return render_template('index.html', **template_context)
 
@@ -66,7 +72,6 @@ def report():
                                         company_id,
                                         convert_date(first_date),
                                         convert_date(last_date))
-    #print(phones_mssql_list)
     try:
         conn = mysql_connect()
     except pymysql.err.OperationalError as e:
@@ -77,8 +82,9 @@ def report():
     mysql_phones_set = set(i[0] for i in phones_mysql_list)
     result = mssql_phones_set & mysql_phones_set
 
+    clear_files()
     mssql_filename = make_file(mssql_phones_set, 'Телефоны клиентов компании')
-    mysql_filename = make_file(mysql_phones_set, 'Телефоный всех клиентов')
+    mysql_filename = make_file(mysql_phones_set, 'Телефоны всех клиентов')
     result_filename = make_file(result, 'Результат')
 
     template_context = {
@@ -88,20 +94,17 @@ def report():
         'number_mssql_phones': len(phones_mssql_list),
         'number_mysql_phones': len(phones_mysql_list),
         'number_result': len(result),
-        'mssql_filename': mssql_filename,
-        'mysql_filename': mysql_filename,
-        'result_filename': result_filename
+        'mssql_filename' : url_for('files', filename=mssql_filename),
+        'mysql_filename' : url_for('files', filename=mysql_filename),
+        'result_filename': url_for('files', filename=result_filename),
         }
     return render_template('report.html', **template_context)
 
 @app.route('/files/<filename>')
 def files(filename):
-    pass
-##    full_filename = 'files\\' + filename
-##    print('Full filename', full_filename)
-##    print('URL FOR ', url_for('files', filename=filename))
-##    return send_file(full_filename, as_attachment=True)
-
+    print('Full filename', filename)
+    print('URL FOR ', url_for('files', filename=filename))
+    return send_file(filename, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False)

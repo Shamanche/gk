@@ -5,19 +5,21 @@
   <title>Выбор даты</title>
 </head>
 <body>
+<p><a href="{{ url_for('index') }}"><<< Назад <<<</a></p>
   <p>Результат запроса:</p>
   {% if companyid %}
     <p> ID компании {{ companyid }}</p>
     <p> Дата начала отчета: {{ firstdate }}</p>
     <p> Дата окончания отчета: {{ lastdate }}</p>
   {% endif %}
-  <p>В базе данных RS.Loyalty найдено {{ number_mssql_phones }} телефонов</p>
-  <p>Всего телефонов с токенами: {{ number_mysql_phones }} </p>
+  <p>В базе данных RS.Loyalty найдено телефонов:
+                                            <b>{{ number_mssql_phones }}</b></p>
+  <p>Всего телефонов с токенами: <b>{{ number_mysql_phones }} </b></p>
 
-  <p>
-    Среди клиентов компании пользуются мобильным
-                                        приложением <b>{{ number_result }}</b>.
-  </p>
-  <a href ='/../123.csv'> Скачать </a>
+  <p>Среди клиентов компании пользуются мобильным
+                                    приложением <b>{{ number_result }}</b>.</p>
+  <p><a href ='{{ mssql_filename }}'> Скачать телефоны клиентов компании </a></p>
+  <p><a href ='{{ mysql_filename }}'> Скачать телефоны пользователей МП </a></p>
+  <p><a href ='{{ result_filename }}'> Скачать результат </a></p>
 
 </body>
