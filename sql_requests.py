@@ -64,6 +64,7 @@ def get_all_companies(conn):
 def get_mssql_phones (conn, company_id, first_date, last_date):
     print('Start get_mssql_phones ')
     sql_request ="""
+        set dateformat ydm
         select distinct	CustomerPhones.Phone
         from Transactions, Stores, Companies, DiscountCards,
                                                         Accounts, CustomerPhones
@@ -103,17 +104,4 @@ def get_mysql_phones(conn):
 ##    	and Transactions.DiscountCardID = DiscountCards.DiscountCardID
 ##    	and DiscountCards.AccountID = Accounts.AccountID
 ##    	and Accounts.CustomerID = CustomerPhones.CustomerID"""
-
-sql = """
-        select distinct	CustomerPhones.Phone
-        from Transactions, Stores, Companies, DiscountCards,
-                                                        Accounts, CustomerPhones
-        where Transactions.TransactionTime between '2012-03-02' and '2019-11-30'
-    		and Transactions.StoreID = Stores.StoreID
-        	and Stores.CompanyID = Companies.CompanyID
-        	and Companies.CompanyID = 3
-        	and Transactions.DiscountCardID = DiscountCards.DiscountCardID
-        	and DiscountCards.AccountID = Accounts.AccountID
-        	and Accounts.CustomerID = CustomerPhones.CustomerID
-            """
 
