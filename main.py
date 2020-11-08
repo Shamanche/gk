@@ -13,10 +13,11 @@ app = Flask(__name__)
 ##    return date.strftime('%Y-%d-%m')
 
 def make_file(data, filename='testfile1'):
-    full_name = os.path.join(FOLDER, filename + '_'
-                    + datetime.datetime.now().strftime('%Y-%m-%d') + '.csv' )
-    print(full_name)
-    with open (full_name, 'w') as f:
+    full_name = (filename + '_'
+                    + datetime.datetime.now().strftime('%Y-%m-%d') + '.csv')
+    full_path = os.path.join(FOLDER, full_name)
+    print(full_path)
+    with open (full_path, 'w') as f:
         for i in data:
             f.write(i+'\n')
     return full_name
@@ -104,9 +105,9 @@ def report():
 
 @app.route('/files/<filename>')
 def files(filename):
-    print('Full filename', filename)
-    print('URL FOR ', url_for('files', filename=filename))
-    return send_file(filename, as_attachment=True)
+    full_path = os.path.join(FOLDER, filename)
+    print ('full_path: ', full_path)
+    return send_file(full_path, as_attachment=True)
 
-##if __name__ == '__main__':
-##    app.run(debug=True, use_reloader=False)
+if __name__ == '__main__':
+    app.run(debug=True, use_reloader=False)
