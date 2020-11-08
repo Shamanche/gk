@@ -22,8 +22,12 @@ def make_file(data, filename='testfile1'):
     return full_name
 
 def clear_files():
-    for file in os.listdir(FOLDER):
-        os.remove(os.path.join(FOLDER, file))
+    try:
+        for file in os.listdir(FOLDER):
+            os.remove(os.path.join(FOLDER, file))
+    except FileNotFoundError:
+        os.mkdir(FOLDER)
+
 
 
 @app.route('/', methods=['post', 'get'])
@@ -104,5 +108,5 @@ def files(filename):
     print('URL FOR ', url_for('files', filename=filename))
     return send_file(filename, as_attachment=True)
 
-if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False)
+##if __name__ == '__main__':
+##    app.run(debug=True, use_reloader=False)
